@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/roshan-2501/Jmeter_Jenkins_HandsOn_53.git', branch: 'main'
+            }
+        }
+        stage('Run JMeter Test') {
+            steps {
+                sh 'jmeter -n -t handson_32_manualRec.jmx -l results.jtl'
+            }
+        }
+    }
+    post {
+        always {
+            archiveArtifacts artifacts: 'results.jtl', allowEmptyArchive: true
+            publishPerformanceReport sourceDataFiles: 'results.jtl'
+        }
+    }
+}
